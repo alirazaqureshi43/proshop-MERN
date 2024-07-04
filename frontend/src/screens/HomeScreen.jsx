@@ -1,22 +1,22 @@
 import {Row, Col} from 'react-bootstrap'
-// import { useState, useEffect } from 'react'
-// import axios from 'axios'
 import { useGetProductsQuery } from '../slices/productsApiSlice'
 import Product from '../components/Product'
 import Loader from '../components/Loader';
 import Message from '../components/Message';
+import { Link, useParams } from 'react-router-dom';
+import Paginate from '../components/Paginate'
+import ProductCarousel from '../components/ProductCarousel'
+
 const HomeScreen = () => {
-    const {data: products, isLoading, error} = useGetProductsQuery();
-// const [products, setProducts] = useState([])
-// useEffect(()=>{
-//     const fetchProducts = async () =>{
-//         const { data } = await axios.get('/api/products')
-//         setProducts(data)
-//     }
-//      fetchProducts()
-// },[])
+    const {pageNumber, keyword} = useParams()
+    const {data, isLoading, error} = useGetProductsQuery({pageNumber, keyword});
   return (
     <>
+    {
+        !keyword ? (<ProductCarousel/>) : (
+            <Link to='/' className='btn btn-light'>Go Back</Link>
+        )
+    }
     {
         isLoading ? (
             <Loader/>
@@ -28,7 +28,7 @@ const HomeScreen = () => {
             <h1>Latest Products</h1>
             <Row>
                 {
-                    products.map((product)=>(
+                    data.products.map((product)=>(
                         <Col sm={12} md={6} lg={4} xl={3} >
                             <Product product={product}/>
                         </Col>
@@ -36,6 +36,11 @@ const HomeScreen = () => {
                 }
         
             </Row>
+            <Paginate
+            pages= {data.pages}
+            page={data.page}
+            keyword ={keyword? keyword:''}/>
+           
            </>
         )
     }
