@@ -27,14 +27,14 @@ app.use('/api/upload', uploadRoutes)
 const __dirname = path.resolve()
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
-// if(process.env.NODE_ENV === 'production'){
-//     app.use(express.static(path.join(__dirname, '/frontend/build')))
-//     app.get('*',(res,req)=> res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html')))
-// }else{
-//     app.get('/',(req,res)=>{
-//         res.send('Api running...')
-//     })
-// }
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static(path.join(__dirname, '/frontend/build')))
+    app.get('*',(res,req)=> res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html')))
+}else{
+    app.get('/',(req,res)=>{
+        res.send('Api running...')
+    })
+}
 
 app.use(notFound)
 app.use(errorHandler)
